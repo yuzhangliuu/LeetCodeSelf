@@ -1,0 +1,71 @@
+C++ 代码规范
+
+程序设计与编码原则
+ - 设计先行，考虑极端情况、可复用性、可扩展性
+ - 正式模块需要详细的文档说明
+ - 声明和实现分离（.h和.cpp）
+ - 清晰的工程结构
+ - 不能有无法执行到的死代码
+ - 完善的单元测试
+ - 测试没问题后再提交代码
+
+头文件
+ - #define保护
+ - #include顺序（直接关联的header->C++标准库->其他库->自己的其他header）
+ - 不允许使用宏，用inline函数和constexpr代替
+ - 不允许使用typedef，用using代替
+ - 不允许使用C标准库，用C++版本的标准库代替
+ - 不允许使用#pragma
+ - 不允许使用全局变量
+ - 头文件命名采用下划线形式，如foo_bar.h
+
+class与struct
+ - 构造函数、析构函数等6件套必须显式声明
+ - 单参数构造函数必须加explicit避免隐式类型转换
+ - struct里不允许有成员函数，不允许使用union
+ - 一个类不能同时继承两个以上的非Interface类
+ - 不允许运算符重载
+ - 使用多态时，virtual、override、final关键词有且仅有一个类命名采用驼峰形式
+ ThisIsClass，对应的头文件名如this_is_class.h
+ - 类对外的接口函数使用驼峰命名如GetData，私有函数用下划线方式get_data
+ - 类成员变量必须为私有，使用下划线方式命名，this_data_
+
+函数
+ - 函数参数能加const的必须加上，函数本身亦然
+ - 函数必须声明noexcept或者noexcept(false)，如果可抛异常，必须在头文件中说明
+ 所有异常发生条件
+ - 参数和返回类型中，A const& a和A const* a代替const A& a和const A* a
+ - 不允许参数中有默认值
+ - 一个函数只能有一个return
+ - Lamda表达式不能隐式捕获
+
+日志与异常处理
+ - 使用C++中的Exception机制，不使用C中的异常返回值
+ - 在main函数中必须捕获所有异常
+ - 除了main函数以外，只捕获能够处理的异常
+ - 使用日志来记录程序运行状况：DEBUG、INFO、WARN、ERROR
+ - INFO日志的数量与执行的任务数量一致，包括尽可能详细的信息用于故障分析等
+
+其他
+ - 除了main函数所有代码必须在namespace中
+ - enum class代替enum，同时必须声明类型
+ - 使用std::int32_t、std::int64_t等代替int、long等
+ - 尽可能不用浮点计算，所有使用的地方必须归档
+ - 所有变量声明时都要初始化，使用{}进行初始化
+ - 不能有Magic Number，要定义为常量或者放在配置中
+ - 不能使用new和malloc，可以用std::make_shared等代替
+ - 临时变量尽量构建在栈上
+ - 参考autodrive-common项目中的代码规范
+
+命名规则整理（参考google naming convection）
+
+Type								Naming Example
+namespace							autodrive::fusion, autodrive::planning
+class & enum class					LidarProcessor, SensorData
+struct								Obstacle, LaneMarker
+class public & protected interface	GetData, Read
+class private function				get_timestamp, read_from_radar
+enum item							CREATED, READ_ONLY
+const variable						kMaxLineLength, kBufferSize
+class variable						point_cloud_ptr_, num_thread_
+local variable						point_array, iter
